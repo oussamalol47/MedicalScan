@@ -1,0 +1,57 @@
+﻿@model MedicalScan.ViewModels.MedicalViewModel
+<style>
+ 
+    h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    #filterForm {
+        margin-bottom: 20px;
+    }
+
+    #SpecialtyId {
+        width: 200px; 
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+</style>
+
+<h2>Doctors</h2>
+
+
+<form id="filterForm">
+    <label for="SpecialtyId">Select Specialty:</label>
+    <select id="SpecialtyId" name="SelectedSpecialtyId" asp-items="new SelectList(Model.Specialities, nameof(Speciality.Id), nameof(Speciality.Name))">
+        <option value="0">All</option>
+    </select>
+</form>
+
+<div id="doctorsContainer">
+    <!-- initial list of doctors -->
+    @await Html.PartialAsync("_DoctorsPartial", Model)
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        // Trigger the filterDoctors function when the selection changes
+        $('#SpecialtyId').change(filterDoctors);
+
+        function filterDoctors() {
+            var selectedSpecialtyId = $('#SpecialtyId').val();
+            $.ajax({
+                type: 'GET',
+                url: '/Home/FilterDoctors',
+                data: { selectedSpecialtyId: selectedSpecialtyId },
+                success: function (result) {
+                    $('#doctorsContainer').html(result);
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,50 @@
+﻿@model MedicalScan.ViewModels.MedicalViewModel
+
+<style>
+    .doctor-card {
+        background: #e3fff2;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: 'Roboto', sans-serif;
+        height: 100%; 
+    }
+
+    .specialties-list {
+        margin-top: 10px;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        // Get the maximum height of the cards
+        var maxHeight = 0;
+        $('.doctor-card').each(function () {
+            var cardHeight = $(this).outerHeight();
+            maxHeight = Math.max(maxHeight, cardHeight);
+        });
+
+        // Set the maximum height for all cards
+        $('.doctor-card').css('height', maxHeight + 'px');
+    });
+</script>
+
+<div class="container">
+    <div class="row">
+        @foreach (var doctor in Model.Doctors)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card doctor-card">
+                    <div class="card-body">
+                        <h5 class="card-title">@doctor.Name</h5>
+                        <div class="specialties-list">
+                            @foreach (var specialty in doctor.DoctorSpecialities.Select(ds => ds.Speciality.Name))
+                            {
+                                <div>@specialty</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
